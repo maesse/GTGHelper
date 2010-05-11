@@ -140,6 +140,8 @@ namespace GTGHelper
                 }
 
                 string driverName = ((ListControl)sender).Text;
+                if (driverName.Trim().Length == 0)
+                    return;
 
                 // Check if driver is already added
                 for (int i = 0; i < racewinners.Items.Count; i++)

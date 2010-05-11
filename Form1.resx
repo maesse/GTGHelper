@@ -125,11 +125,11 @@
 the Calculate Points button will unlock. This will calculate the points and print all the good, bad and failed predictions.
 
 Notes: 
-Good prediction = Parsed as a GTG prediction (P1 name, P2 name, ...) AND the parser understood all the names.
-Bad prediction =  Parsed as a GTG prediction (P1 name, P2 name, ...) BUT the parser couldn't understand one or more names.
-Non/Failed prediction = Comment that did not look like a GTG prediction.
-If a comment has been edited, it will be left as a failed prediction.
-If you are using GTGHelper behind a proxy, you'll need to start GTGHelper with the argument --proxy.
+- Good prediction = Parsed as a GTG prediction (P1 name, P2 name, ...) AND the parser understood all the names.
+- Bad prediction =  Parsed as a GTG prediction (P1 name, P2 name, ...) BUT the parser couldn't understand one or more names.
+- Non/Failed prediction = Comment that did not look like a GTG prediction.
+- If a comment has been edited, it will be left as a failed prediction.
+- If you are using GTGHelper behind a proxy, you'll need to start GTGHelper with the argument --proxy.
 
 Issues? Message mazing over reddit.</value>
   </data>
