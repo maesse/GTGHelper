@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using HtmlAgilityPack;
 using System.IO;
@@ -233,7 +232,7 @@ namespace GTGHelper
 
             // Clean up
             red.PostTime = red.PostTime.Replace("&#32;", " ");
-            if(red.PostTime.Contains('*') || red.PostTime.Contains("&#42;"))
+            if(red.PostTime.Contains("*") || red.PostTime.Contains("&#42;"))
             {
                 red.PostTime = red.PostTime.Replace("*", "*(EDITED!!!)");
                 red.PostTime = red.PostTime.Replace("&#42;", "*(EDITED!!!)");
