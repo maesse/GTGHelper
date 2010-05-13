@@ -1,0 +1,2 @@
+﻿1
+http://github.com/downloads/maesse/GTGHelper/GTGHelper-0.1a.exe
