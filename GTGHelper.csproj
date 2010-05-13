@@ -122,6 +122,7 @@
     <Content Include="HtmlAgilityPack.pdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="version.txt" />
     <None Include="Properties\app.manifest" />
     <None Include="Resources\Untitled-3.ico" />
   </ItemGroup>
@@ -144,7 +145,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo copy "$(TargetPath)" "$(TargetPath).temp.exe"
+    <PostBuildEvent>copy "$(TargetPath)" "$(TargetPath).temp.exe"
 echo ilmerge /t:winexe /out:"$(TargetPath).new.exe" "$(TargetPath).temp.exe" "$(TargetDir)HtmlAgilityPack.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

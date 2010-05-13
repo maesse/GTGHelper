@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using HtmlAgilityPack;
+using System.Diagnostics;
 
 namespace GTGHelper
 {
@@ -16,6 +17,7 @@ namespace GTGHelper
         // Delegate for appending text to the GUI from another thread.
         delegate void AppendTextDelegate(string str);
         public Parser parser;
+        static string UpdateURL;
         bool _commentLock = true;
         bool _racerLock = true;
         bool commentLock { get { return _commentLock; } set { _commentLock = value; CheckLock(); } } // true untill comments are parsed
@@ -113,6 +115,7 @@ namespace GTGHelper
             // Set title
             this.Text = "GTGGHelper " + Program.VERSION;
             Hook.form = this;
+            CheckForUpdate();
         }
 
         // Enables/Disables main parse button
@@ -151,6 +154,86 @@ namespace GTGHelper
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
             worker.DoWork += new DoWorkEventHandler(Parser.ParseUrl);
             worker.RunWorkerAsync(url);
+        }
+
+        // Start a async check for update
+        void CheckForUpdate()
+        {
+            string url = "http://github.com/maesse/GTGHelper/raw/master/version.txt";
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(updateCheck_RunWorkerCompleted);
+            worker.DoWork += new DoWorkEventHandler(DoCheckForUpdate);
+            worker.RunWorkerAsync(url);
+        }
+
+        void DoCheckForUpdate(object sender, DoWorkEventArgs e)
+        {
+            string url = e.Argument as string;
+            if (url == null)
+                return;
+            Stream stream;
+            try
+            {
+                // Try to fetch from webpage
+                HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
+
+                // Auto-detecting proxy takes a horribly long time, so disable it by default
+                if (!Parser.UseProxy)
+                    wr.Proxy = null;
+
+                // Don't want to get rejected because of a bad UserAgent.
+                wr.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3";
+                wr.Referer = "http://www.google.com/";
+
+                // Get the response stream
+                stream = wr.GetResponse().GetResponseStream();
+            }
+            catch
+            {
+                return;
+            }
+            string html;
+            using (StreamReader rd = new StreamReader(stream))
+            {
+                html = rd.ReadToEnd();
+            }
+
+            string[] splitted = html.Split('\n');
+            // Expect 3 lines at least
+            if (splitted.Length < 3)
+                return;
+            int versionint = 0;
+            // Try to parse versionint
+            if (!int.TryParse(splitted[0], out versionint))
+                return;
+
+            if (versionint == Program.VersionInt)
+                return;
+
+            // We have a new version. Get url
+            string newversionUrl = splitted[1];
+
+            e.Result = splitted;
+
+        }
+
+        void updateCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            string[] args = e.Result as string[];
+            if (args == null)
+                return;
+
+            linkLabel1.Text = "New version available";
+            UpdateURL = args[2];
+            linkLabel1.LinkClicked += new LinkLabelLinkClickedEventHandler(linkLabel1_LinkClicked);
+            
+        }
+
+        void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = UpdateURL;
+            proc.Start();
         }
 
         // Called when the URL/GTG parser finishes
