@@ -1,2 +1,3 @@
 ﻿1
+0.1a
 http://github.com/downloads/maesse/GTGHelper/GTGHelper-0.1a.exe
