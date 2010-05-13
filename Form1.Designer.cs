@@ -30,16 +30,16 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonParseURL = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.driverlist = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.racewinners = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonCalculatePoints = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelNonPred = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -58,15 +58,15 @@
             this.textBox1.Size = new System.Drawing.Size(587, 20);
             this.textBox1.TabIndex = 0;
             // 
-            // button1
+            // buttonParseURL
             // 
-            this.button1.Location = new System.Drawing.Point(6, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(106, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Read Comments";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonParseURL.Location = new System.Drawing.Point(6, 9);
+            this.buttonParseURL.Name = "buttonParseURL";
+            this.buttonParseURL.Size = new System.Drawing.Size(106, 23);
+            this.buttonParseURL.TabIndex = 1;
+            this.buttonParseURL.Text = "Read Comments";
+            this.buttonParseURL.UseVisualStyleBackColor = true;
+            this.buttonParseURL.Click += new System.EventHandler(this.buttonParseUrl_Click);
             // 
             // richTextBox1
             // 
@@ -82,31 +82,6 @@
             // driverlist
             // 
             this.driverlist.FormattingEnabled = true;
-            this.driverlist.Items.AddRange(new object[] {
-            "Jenson Button",
-            "Lewis Hamilton",
-            "Michael Schumacher",
-            "Nico Rosberg",
-            "Sebastian Vettel",
-            "Mark Webber",
-            "Felipe Massa",
-            "Fernando Alonso",
-            "Rubens Barrichello",
-            "Nico Hulkenberg",
-            "Robert Kubica",
-            "Vitaly Petrov",
-            "Adrian Sutil",
-            "Vitantonio Liuzzi",
-            "Sebastien Buemi",
-            "Jaime Alguersuari",
-            "Jarno Trulli",
-            "Heikki Kovalainen",
-            "Karun Chandhok ",
-            "Bruno Senna",
-            "Pedro de la Rosa",
-            "Kamui Kobayashi",
-            "Timo Glock",
-            "Lucas di Grassi"});
             this.driverlist.Location = new System.Drawing.Point(6, 32);
             this.driverlist.Name = "driverlist";
             this.driverlist.Size = new System.Drawing.Size(116, 134);
@@ -140,15 +115,15 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Race Result:";
             // 
-            // button3
+            // buttonReset
             // 
-            this.button3.Location = new System.Drawing.Point(116, 170);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(60, 23);
-            this.button3.TabIndex = 8;
-            this.button3.Text = "Reset";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.Clear_Click);
+            this.buttonReset.Location = new System.Drawing.Point(116, 170);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(60, 23);
+            this.buttonReset.TabIndex = 8;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.Clear_Click);
             // 
             // listBox1
             // 
@@ -175,9 +150,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.buttonCalculatePoints);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.button3);
+            this.groupBox1.Controls.Add(this.buttonReset);
             this.groupBox1.Controls.Add(this.listBox1);
             this.groupBox1.Controls.Add(this.driverlist);
             this.groupBox1.Controls.Add(this.racewinners);
@@ -189,16 +164,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Select Race Results...";
             // 
-            // button2
+            // buttonCalculatePoints
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(182, 170);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(97, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "Calculate Points";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonCalculatePoints.Enabled = false;
+            this.buttonCalculatePoints.Location = new System.Drawing.Point(182, 170);
+            this.buttonCalculatePoints.Name = "buttonCalculatePoints";
+            this.buttonCalculatePoints.Size = new System.Drawing.Size(97, 23);
+            this.buttonCalculatePoints.TabIndex = 0;
+            this.buttonCalculatePoints.Text = "Calculate Points";
+            this.buttonCalculatePoints.UseVisualStyleBackColor = true;
+            this.buttonCalculatePoints.Click += new System.EventHandler(this.buttonCalculate_Click);
             // 
             // groupBox2
             // 
@@ -251,14 +226,14 @@
             // 
             // Form1
             // 
-            this.AcceptButton = this.button1;
+            this.AcceptButton = this.buttonParseURL;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 434);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonParseURL);
             this.Controls.Add(this.textBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(438, 382);
@@ -276,16 +251,16 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonParseURL;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ListBox driverlist;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox racewinners;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonCalculatePoints;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label labelPred;
         private System.Windows.Forms.Label label3;

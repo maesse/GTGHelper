@@ -4,6 +4,7 @@ using System.Text;
 
 namespace GTGHelper
 {
+    // Static hook to the Form class. Used for outputting to the textarea.
     public static class Hook
     {
         public static Form1 form;

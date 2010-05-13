@@ -13,6 +13,7 @@ namespace GTGHelper
 {
     public partial class Form1 : Form
     {
+        // Delegate for appending text to the GUI from another thread.
         delegate void AppendTextDelegate(string str);
         public Parser parser;
         bool _commentLock = true;
@@ -20,32 +21,10 @@ namespace GTGHelper
         bool commentLock { get { return _commentLock; } set { _commentLock = value; CheckLock(); } } // true untill comments are parsed
         bool racerLock { get { return _racerLock; } set { _racerLock = value; CheckLock(); } } // true untill racewinners has been set
 
-        // Racer names
-        static string[] drivers = new string[] {"Jenson", "Button",
-                                                "Lewis", "Hamilton",
-                                                "Michael", "Schumacher",
-                                                "Nico", "Rosberg",
-                                                "Sebastian", "Vettel",
-                                                "Mark", "Webber",
-                                                "Felipe", "Massa",
-                                                "Fernando", "Alonso",
-                                                "Rubens", "Barrichello",
-                                                "Nico", "Hulkenberg",
-                                                "Robert", "Kubica",
-                                                "Vitaly", "Petrov",
-                                                "Adrian", "Sutil",
-                                                "Vitantonio", "Liuzzi",
-                                                "Sebastien", "Buemi",
-                                                "Jaime", "Alguersuari",
-                                                "Jarno", "Trulli",
-                                                "Heikki", "Kovalainen",
-                                                "Karun", "Chandhok",
-                                                "Bruno", "Senna",
-                                                "Pedro", "Rosa",
-                                                "Kamui", "Kobayashi",
-                                                "Timo", "Glock",
-                                                "Lucas", "Grassi" };
+        // List of all racers in the champtionship
+        static List<Racer> Racers = new List<Racer>();
 
+        // Source list of names
         static string[] fullDrivers = new string[] 
         {
             "Jenson Button",
@@ -74,10 +53,65 @@ namespace GTGHelper
             "Lucas di Grassi"
         };
 
+        // Inits program
+        void Init()
+        {
+            // Put racers in the racers list.
+            for (int i = 0; i < fullDrivers.Length; i++)
+            {
+                string driver = fullDrivers[i];
+                Racer r = new Racer(driver);
+
+                // Handle obvious cases of alternative spellings
+                switch (r.Name)
+                {
+                    case "Michael Schumacher":
+                        r.Alternatives.Add("Schumi");
+                        r.Alternatives.Add("Shumi");
+                        r.Alternatives.Add("Shumacher");
+                        r.Alternatives.Add("MSC");
+                        break;
+                    case "Jenson Button":
+                        r.Alternatives.Add("Buttons");
+                        break;
+                    case "Mark Webber":
+                        r.Alternatives.Add("Weber");
+                        break;
+                    case "Nico Rosberg":
+                        r.Alternatives.Add("Roseberg");
+                        r.Alternatives.Add("Rosbeg");
+                        break;
+                    case "Rubens Barrichello":
+                        r.Alternatives.Add("Barichello");
+                        break;
+                    case "Lewis Hamilton":
+                        r.Alternatives.Add("Hammilton");
+                        break;
+                    case "Kamui Kobayashi":
+                        r.Alternatives.Add("Kobyashi");
+                        break;
+                    case "Sebastian Vettel":
+                        r.Alternatives.Add("Vettle");
+                        break;
+                    case "Nico Hulkenberg":
+                        r.Alternatives.Add("hulkenburg");
+                        r.Alternatives.Add("hülkenberg");
+                        r.Alternatives.Add("Hulk");
+                        break;
+                }
+
+                Racers.Add(r);
+            }
+            driverlist.Items.AddRange(Racers.ToArray());
+        }
+
         public Form1()
         {
             
             InitializeComponent();
+            Init();
+            // Set title
+            this.Text = "GTGGHelper " + Program.VERSION;
             Hook.form = this;
         }
 
@@ -85,30 +119,33 @@ namespace GTGHelper
         void CheckLock()
         {
             if (!commentLock && !racerLock)
-                button2.Enabled = true;
+                buttonCalculatePoints.Enabled = true;
             else
-                button2.Enabled = false;
+                buttonCalculatePoints.Enabled = false;
         }
 
-        
-
+        // Output line to the textarea
         public void WriteLine(string text)
         {
             if (richTextBox1.InvokeRequired)
             {
+                // Handle cross-thread call
                 AppendTextDelegate d = new AppendTextDelegate(WriteLine);
                 this.Invoke(d, new object[] { text });
             } else
                 richTextBox1.Text += text + '\n';
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        // "Read Comments" button for fetching webpage
+        private void buttonParseUrl_Click(object sender, EventArgs e)
         {
-            // Fetch webpage
+            // Reset fields
             richTextBox1.Text = "";
             commentLock = true;
             labelPred.Text = "";
             labelNonPred.Text = "";
+
+            // Let a async thread handle the rest
             string url = textBox1.Text;
             BackgroundWorker worker = new BackgroundWorker();
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
@@ -116,6 +153,7 @@ namespace GTGHelper
             worker.RunWorkerAsync(url);
         }
 
+        // Called when the URL/GTG parser finishes
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Check if parsing is OK, and disables the comment lock
@@ -124,7 +162,7 @@ namespace GTGHelper
                 commentLock = false;
                 labelPred.Text = "" + parser.parseResults.Count;
                 labelNonPred.Text = "" + parser.failedComments.Count;
-                this.AcceptButton = button2;
+                this.AcceptButton = buttonCalculatePoints;
             }
         }
 
@@ -135,24 +173,26 @@ namespace GTGHelper
             {
                 // Limit drivers to 10
                 if (racewinners.Items.Count == 10)
-                {
                     return;
-                }
+                
+                Racer racer = driverlist.SelectedItem as Racer;
 
-                string driverName = ((ListControl)sender).Text;
-                if (driverName.Trim().Length == 0)
+                // Ensure that a Racer object has been selected
+                if (racer == null)
                     return;
 
                 // Check if driver is already added
-                for (int i = 0; i < racewinners.Items.Count; i++)
-                {
-                    if (((string)racewinners.Items[i]).Equals(driverName))
-                        return;
-                }
-                // Now add the driver
-                racewinners.Items.Add(driverName);
+                if (racewinners.Items.Contains(racer))
+                    return;
+
+                // Add to RaceWinners
+                racewinners.Items.Add(racer);
+
+                // Check if we now have 10 winners.
                 if (racewinners.Items.Count == 10)
                     racerLock = false;
+
+                // Remove from DriverList
                 driverlist.Items.RemoveAt(driverlist.SelectedIndex);
             }
         }
@@ -160,15 +200,19 @@ namespace GTGHelper
         // Clear race winner list
         private void Clear_Click(object sender, EventArgs e)
         {
+            // Re-insert all the drivers in the driverlist
             driverlist.Items.Clear();
-            driverlist.Items.AddRange(fullDrivers);
+            driverlist.Items.AddRange(Racers.ToArray());
+
+            // Clear racewinners
             racewinners.Items.Clear();
             racerLock = true;
         }
 
         // Calculate points for redditors
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonCalculate_Click(object sender, EventArgs e)
         {
+            // Sanity check
             if (racewinners.Items.Count != 10)
                 throw new Exception("This shouldn't happen. Tried to calculate points without 10 racewinners");
 
@@ -176,11 +220,12 @@ namespace GTGHelper
                 throw new Exception("This shouldn't happen. Tried to calculate points without any comments");
 
             // Grab racewinners
-            string[] winners = new string[10];
+            Racer[] winners = new Racer[10];
             for (int i = 0; i < 10; i++)
             {
-                winners[i] = (string)racewinners.Items[i];
+                winners[i] = (Racer)racewinners.Items[i];
             }
+
             List<Redditor> failedCalc = new List<Redditor>();
             List<Redditor> successCalc = new List<Redditor>();
             // Handle each GTG Comment
@@ -193,18 +238,25 @@ namespace GTGHelper
                 int[] points = new int[10];
 
                 // Go through predictions
+                // Check if the prediction name is a known racer
                 for (int i = 0; i < 10; i++)
                 {
                     string predictName = red.Predictions[i];
-                    // Check if the prediction name is a known racer
+                    if (predictName.Equals("!MISSING-PREDICTION"))
+                        continue;
                     string[] predTokens = predictName.ToLower().Split(' ');
+                    
                     bool nameOk = false;
+                    // Iterate over tokens
                     for (int j = 0; j < predTokens.Length && !nameOk; j++)
                     {
                         string token = predTokens[j];
-                        for (int h = 0; h < drivers.Length; h++)
+
+                        // Compare to known racers
+                        for (int h = 0; h < Racers.Count; h++)
                         {
-                            if (drivers[h].ToLower().Equals(token))
+                            Racer racer = Racers[h];
+                            if (racer.ContainsName(token))
                             {
                                 nameOk = true;
                                 break;
@@ -224,34 +276,32 @@ namespace GTGHelper
                     bool foundWinner = false;
                     for (int j = 0; j < winners.Length && !foundWinner; j++)
                     {
-                        string[] splitted = winners[j].ToLower().Split(' ');
-                        // Check both first and lastname
-                        for (int h = 0; h < splitted.Length && !foundWinner; h++)
+                        Racer racer = winners[j];
+
+                        // Check each predictTokens
+                        for (int g = 0; g < predTokens.Length; g++)
                         {
-                            // Check each predictTokens
-                            for (int g = 0; g < predTokens.Length ; g++)
+                            // Check against racername
+                            if (racer.ContainsName(predTokens[g]))
                             {
-                                if (splitted[h].Equals(predTokens[g]))
+                                // Redditor gets point for this prediction
+                                foundWinner = true;
+
+                                // Was it spot on?
+                                if (i == j)
                                 {
-                                    // Redditor gets point for this prediction
-                                    foundWinner = true;
-
-                                    // Was it spot on?
-                                    if (i == j)
-                                    {
-                                        points[i] = 4;
-                                    } // One off? 
-                                    else if (i + 1 == j || i - 1 == j)
-                                    {
-                                        points[i] = 2;
-                                    } // prediction is in top10
-                                    else
-                                    {
-                                        points[i] = 1;
-                                    }
-
-                                    break;
+                                    points[i] = 4;
+                                } // One off? 
+                                else if (i + 1 == j || i - 1 == j)
+                                {
+                                    points[i] = 2;
+                                } // prediction is in top10
+                                else
+                                {
+                                    points[i] = 1;
                                 }
+
+                                break;
                             }
                         }
                     }
@@ -282,47 +332,60 @@ namespace GTGHelper
 
                 successCalc.Add(red);
             }
+
             // Show God/Bad comment count
             labelPred.Text = successCalc.Count + " Good, " + failedCalc.Count + " Bad comments";
 
             // Sort redditors by score and print result.
             successCalc.Sort((a, b) => { return b.TotalScore.CompareTo(a.TotalScore); });
             Hook.WriteLine("Reddit GuessTheGrid Points:");
-            Hook.WriteLine("Good predictions: " + successCalc.Count + " - Bad predictions: " + failedCalc.Count);
-            Hook.WriteLine("------------------------------------");
-            Hook.WriteLine("---    Listing Good Predictions  ---");
-            Hook.WriteLine("------------------------------------");
-            foreach (Redditor red in successCalc)
+            Hook.WriteLine(string.Format("Good predictions:   \t{0,2}", successCalc.Count));
+            Hook.WriteLine(string.Format("Bad predictions:    \t{0,2}", failedCalc.Count));
+            Hook.WriteLine(string.Format("Failed predictions: \t{0,2}", parser.failedComments.Count));
+            if (successCalc.Count > 0)
             {
-                // Print name, point table and total score
-                string redString = string.Format("{0,-32}", red.Name) + "\t[";
-                for (int i = 0; i < 10; i++)
+                Hook.WriteLine("------------------------------------");
+                Hook.WriteLine("---    Listing Good Predictions  ---");
+                Hook.WriteLine("------------------------------------");
+            
+                foreach (Redditor red in successCalc)
                 {
-                    redString += red.points[i] + "+";
+                    // Print name, point table and total score
+                    string redString = string.Format("{0,-32}", red.Name) + "\t[";
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (!red.Predictions[i].Equals("!MISSING-PREDICTION"))
+                            redString += red.points[i] + "+";
+                        else
+                            redString += "?+";
+                    }
+                    redString = redString.Substring(0, redString.Length - 1);
+                    redString += "] \tTotal: " + red.TotalScore + " points.";
+                    Hook.WriteLine(redString);
                 }
-                redString = redString.Substring(0, redString.Length - 1);
-                redString += "] \tTotal: " + red.TotalScore + " points.";
-                Hook.WriteLine(redString);
             }
-            Hook.WriteLine("------------------------------------");
-            Hook.WriteLine("---   Listing Bad Predictions    ---");
-            Hook.WriteLine("------------------------------------");
-            foreach (Redditor red in failedCalc)
+            if (failedCalc.Count > 0)
             {
-                Hook.WriteLine(red.ToString());
+                Hook.WriteLine("------------------------------------");
+                Hook.WriteLine("---   Listing Bad Predictions    ---");
+                Hook.WriteLine("------------------------------------");
+                foreach (Redditor red in failedCalc)
+                {
+                    Hook.WriteLine(red.ToString());
+                }
             }
-            Hook.WriteLine("------------------------------------");
-            Hook.WriteLine("- Score calculation complete.");
-            Hook.WriteLine("------------------------------------");
-            Hook.WriteLine("----  Listing FAILED Comments   ----");
-            Hook.WriteLine("------------------------------------");
-            foreach (Redditor red in parser.failedComments)
+            if (parser.failedComments.Count > 0)
             {
-                Hook.WriteLine(red.ToString());
+                Hook.WriteLine("------------------------------------");
+                Hook.WriteLine("----  Listing FAILED Comments   ----");
+                Hook.WriteLine("------------------------------------");
+                foreach (Redditor red in parser.failedComments)
+                {
+                    Hook.WriteLine(red.ToString());
+                }
             }
             Hook.WriteLine("------------------------------------");
-            Hook.WriteLine("------------------------------------");
-            Hook.WriteLine("GTGHelper finished :)");
+            Hook.WriteLine("GTGHelper finished. :)");
         }
     }
 }

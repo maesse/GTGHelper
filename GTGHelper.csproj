@@ -102,8 +102,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Racer.cs" />
+    <Compile Include="Redditor.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -141,8 +144,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(TargetPath).temp.exe"
-ilmerge /t:winexe /out:"$(TargetPath).new.exe" "$(TargetPath).temp.exe" "$(TargetDir)HtmlAgilityPack.dll"</PostBuildEvent>
+    <PostBuildEvent>echo copy "$(TargetPath)" "$(TargetPath).temp.exe"
+echo ilmerge /t:winexe /out:"$(TargetPath).new.exe" "$(TargetPath).temp.exe" "$(TargetDir)HtmlAgilityPack.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
