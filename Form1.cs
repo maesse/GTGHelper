@@ -67,30 +67,48 @@ namespace GTGHelper
                 // Handle obvious cases of alternative spellings
                 switch (r.Name)
                 {
+                    case "Felipe Massa":
+                        r.Alternatives.Add("MAS");
+                        break;
+                    case "Robert Kubica":
+                        r.Alternatives.Add("KUB");
+                        break;
+                    case "Fernando Alonso":
+                        r.Alternatives.Add("ALO");
+                        break;
                     case "Michael Schumacher":
                         r.Alternatives.Add("Schumi");
                         r.Alternatives.Add("Shumi");
                         r.Alternatives.Add("Shumacher");
                         r.Alternatives.Add("MSC");
+                        r.Alternatives.Add("SCH");
+                        r.Alternatives.Add("Schu");
                         break;
                     case "Jenson Button":
                         r.Alternatives.Add("Buttons");
+                        r.Alternatives.Add("BUT");
                         break;
                     case "Mark Webber":
                         r.Alternatives.Add("Weber");
+                        r.Alternatives.Add("WEB");
                         break;
                     case "Nico Rosberg":
                         r.Alternatives.Add("Roseberg");
                         r.Alternatives.Add("Rosbeg");
+                        r.Alternatives.Add("ROS");
                         break;
                     case "Rubens Barrichello":
                         r.Alternatives.Add("Barichello");
+                        r.Alternatives.Add("BAR");
+                        r.Alternatives.Add("Barachello");
                         break;
                     case "Lewis Hamilton":
                         r.Alternatives.Add("Hammilton");
+                        r.Alternatives.Add("HAM");
                         break;
                     case "Kamui Kobayashi":
                         r.Alternatives.Add("Kobyashi");
+                        r.Alternatives.Add("Koboyashi");
                         break;
                     case "Sebastian Vettel":
                         r.Alternatives.Add("Vettle");
@@ -99,6 +117,9 @@ namespace GTGHelper
                         r.Alternatives.Add("hulkenburg");
                         r.Alternatives.Add("hülkenberg");
                         r.Alternatives.Add("Hulk");
+                        break;
+                    case "Adrian Sutil":
+                        r.Alternatives.Add("SUT");
                         break;
                 }
 
