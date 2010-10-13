@@ -52,7 +52,8 @@ namespace GTGHelper
             "Pedro de la Rosa",
             "Kamui Kobayashi",
             "Timo Glock",
-            "Lucas di Grassi"
+            "Lucas di Grassi",
+            "Nick Heidfeld"
         };
 
         // Inits program
@@ -96,11 +97,15 @@ namespace GTGHelper
                         r.Alternatives.Add("Roseberg");
                         r.Alternatives.Add("Rosbeg");
                         r.Alternatives.Add("ROS");
+                        r.Alternatives.Add("Rosburg");
+                        
                         break;
                     case "Rubens Barrichello":
                         r.Alternatives.Add("Barichello");
+                        r.Alternatives.Add("Barrichelo");
                         r.Alternatives.Add("BAR");
                         r.Alternatives.Add("Barachello");
+                        r.Alternatives.Add("Barricello");
                         break;
                     case "Lewis Hamilton":
                         r.Alternatives.Add("Hammilton");
@@ -112,6 +117,8 @@ namespace GTGHelper
                         break;
                     case "Sebastian Vettel":
                         r.Alternatives.Add("Vettle");
+                        r.Alternatives.Add("VET");
+                        r.Alternatives.Add("Vettl");
                         break;
                     case "Nico Hulkenberg":
                         r.Alternatives.Add("hulkenburg");
@@ -120,6 +127,15 @@ namespace GTGHelper
                         break;
                     case "Adrian Sutil":
                         r.Alternatives.Add("SUT");
+                        break;
+                    case "Jaime Alguersuari":
+                        r.Alternatives.Add("Algesuari");
+                        break;
+                    case "Vitantonio Liuzzi":
+                        r.Alternatives.Add("Luizzi");
+                        break;
+                    case "Nick Heidfeld":
+                        r.Alternatives.Add("Hiedfeld");
                         break;
                 }
 
@@ -228,7 +244,7 @@ namespace GTGHelper
             if (!int.TryParse(splitted[0], out versionint))
                 return;
 
-            if (versionint == Program.VersionInt)
+            if (versionint <= Program.VersionInt)
                 return;
 
             // We have a new version. Get url
