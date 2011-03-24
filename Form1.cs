@@ -29,6 +29,13 @@ namespace GTGHelper
         // Source list of names
         static string[] fullDrivers = new string[] 
         {
+            // retired drivers
+//            "Karun Chandhok",
+//            "Bruno Senna",
+//            "Pedro de la Rosa",
+//            "Lucas di Grassi",
+//            "Nico Hulkenberg",
+//            "Robert Kubica",
             "Jenson Button",
             "Lewis Hamilton",
             "Michael Schumacher",
@@ -38,8 +45,6 @@ namespace GTGHelper
             "Felipe Massa",
             "Fernando Alonso",
             "Rubens Barrichello",
-            "Nico Hulkenberg",
-            "Robert Kubica",
             "Vitaly Petrov",
             "Adrian Sutil",
             "Vitantonio Liuzzi",
@@ -47,13 +52,16 @@ namespace GTGHelper
             "Jaime Alguersuari",
             "Jarno Trulli",
             "Heikki Kovalainen",
-            "Karun Chandhok",
-            "Bruno Senna",
-            "Pedro de la Rosa",
             "Kamui Kobayashi",
             "Timo Glock",
-            "Lucas di Grassi",
-            "Nick Heidfeld"
+            "Nick Heidfeld",
+
+            // new drivers
+            "Pastor Maldonado",
+            "Sergio Perez",
+            "Narain Karthikeyan",
+            "Jerome d'Ambrosio",
+            "Paul di Resta"
         };
 
         // Inits program
@@ -71,9 +79,9 @@ namespace GTGHelper
                     case "Felipe Massa":
                         r.Alternatives.Add("MAS");
                         break;
-                    case "Robert Kubica":
-                        r.Alternatives.Add("KUB");
-                        break;
+                    //case "Robert Kubica":
+                    //    r.Alternatives.Add("KUB");
+                    //    break;
                     case "Fernando Alonso":
                         r.Alternatives.Add("ALO");
                         break;
@@ -120,11 +128,11 @@ namespace GTGHelper
                         r.Alternatives.Add("VET");
                         r.Alternatives.Add("Vettl");
                         break;
-                    case "Nico Hulkenberg":
-                        r.Alternatives.Add("hulkenburg");
-                        r.Alternatives.Add("hülkenberg");
-                        r.Alternatives.Add("Hulk");
-                        break;
+                    //case "Nico Hulkenberg":
+                    //    r.Alternatives.Add("hulkenburg");
+                    //    r.Alternatives.Add("hülkenberg");
+                    //    r.Alternatives.Add("Hulk");
+                    //    break;
                     case "Adrian Sutil":
                         r.Alternatives.Add("SUT");
                         break;

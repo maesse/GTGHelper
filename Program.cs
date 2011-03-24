@@ -6,8 +6,8 @@ namespace GTGHelper
 {
     static class Program
     {
-        public static readonly string VERSION = "0.3";
-        public static readonly int VersionInt = 3;
+        public static readonly string VERSION = "0.4";
+        public static readonly int VersionInt = 4;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

@@ -71,9 +71,9 @@ namespace GTGHelper
             // Fail...
             if (doc.DocumentNode.ChildNodes.Count < 2
                 || doc.DocumentNode.ChildNodes[1].ChildNodes.Count < 2
-                || doc.DocumentNode.ChildNodes[1].ChildNodes[1].ChildNodes.Count < 11
+                || doc.DocumentNode.ChildNodes[1].ChildNodes[1].ChildNodes.Count < 8
                 || doc.DocumentNode.ChildNodes[1].ChildNodes[1].ChildNodes[4].ChildNodes.Count < 3
-                || doc.DocumentNode.ChildNodes[1].ChildNodes[1].ChildNodes[4].ChildNodes[2].ChildNodes.Count < 3)
+                || doc.DocumentNode.ChildNodes[1].ChildNodes[1].ChildNodes[4].ChildNodes[2].ChildNodes.Count < 4)
             {
                 Hook.WriteLine("[GTGHelper] Either this is not a reddit GTG comment page, or reddit has changed some stuff around and you need to message mazing.");
                 return;
