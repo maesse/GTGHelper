@@ -100,28 +100,37 @@ namespace GTGHelper
                     case "Mark Webber":
                         r.Alternatives.Add("Weber");
                         r.Alternatives.Add("WEB");
+                        r.Alternatives.Add("Webbaarrrrrr");
                         break;
                     case "Nico Rosberg":
                         r.Alternatives.Add("Roseberg");
                         r.Alternatives.Add("Rosbeg");
                         r.Alternatives.Add("ROS");
                         r.Alternatives.Add("Rosburg");
-                        
+                        r.Alternatives.Add("Rosbery");
+                        r.Alternatives.Add("Rosberd");
+                        r.Alternatives.Add("Rossberg");
                         break;
                     case "Rubens Barrichello":
                         r.Alternatives.Add("Barichello");
                         r.Alternatives.Add("Barrichelo");
                         r.Alternatives.Add("BAR");
                         r.Alternatives.Add("Barachello");
+                        r.Alternatives.Add("Barrachello");
                         r.Alternatives.Add("Barricello");
                         break;
                     case "Lewis Hamilton":
                         r.Alternatives.Add("Hammilton");
                         r.Alternatives.Add("HAM");
+                        r.Alternatives.Add("hammi");
                         break;
                     case "Kamui Kobayashi":
                         r.Alternatives.Add("Kobyashi");
                         r.Alternatives.Add("Koboyashi");
+                        r.Alternatives.Add("Kobiyashi");
+                        r.Alternatives.Add("Kobash!");
+                        r.Alternatives.Add("Kobashi");
+                        
                         break;
                     case "Sebastian Vettel":
                         r.Alternatives.Add("Vettle");
@@ -138,6 +147,7 @@ namespace GTGHelper
                         break;
                     case "Jaime Alguersuari":
                         r.Alternatives.Add("Algesuari");
+                        r.Alternatives.Add("alguseari");
                         break;
                     case "Vitantonio Liuzzi":
                         r.Alternatives.Add("Luizzi");
