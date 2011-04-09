@@ -106,7 +106,7 @@ namespace GTGHelper
             CommentCount++;
             // Read comment info
             Redditor red = new Redditor();
-            red.Name = node.ChildNodes[2].ChildNodes[0].ChildNodes[0].InnerText;
+            red.Name = node.ChildNodes[2].ChildNodes[0].ChildNodes[1].InnerText;
             int postTimeOffset = 5;
             // Reddit moderator adds some stuff
             if (node.ChildNodes[2].ChildNodes[0].ChildNodes.Count == 8)
