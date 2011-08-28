@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace GTGHelper
 {
     // Represents a racer in the championship.
     // Used for supplying alternative names.
+    [Serializable()]
     public class Racer
     {
         // Full name of the driver.
@@ -13,8 +15,13 @@ namespace GTGHelper
         // Alternatives will contain Name.split(WhiteSpace) + any alternative spelling of this racer.
         public List<string> Alternatives = new List<string>();
 
-        public Racer(string Name)
+        public Racer()
         {
+        }
+
+        public void SetName(string Name)
+        {
+            Alternatives.Clear();
             this.Name = Name;
 
             // Split up name and add to Alternatives list

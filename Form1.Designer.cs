@@ -39,6 +39,7 @@
             this.buttonReset = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.driverButton = new System.Windows.Forms.Button();
             this.buttonCalculatePoints = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelNonPred = new System.Windows.Forms.Label();
@@ -46,6 +47,7 @@
             this.labelPred = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +58,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(118, 12);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(587, 20);
+            this.textBox1.Size = new System.Drawing.Size(601, 20);
             this.textBox1.TabIndex = 0;
             // 
             // buttonParseURL
@@ -76,7 +78,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Location = new System.Drawing.Point(298, 38);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(407, 384);
+            this.richTextBox1.Size = new System.Drawing.Size(421, 390);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
@@ -151,6 +153,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.driverButton);
             this.groupBox1.Controls.Add(this.buttonCalculatePoints);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.buttonReset);
@@ -164,6 +167,16 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Select Race Results...";
+            // 
+            // driverButton
+            // 
+            this.driverButton.Location = new System.Drawing.Point(6, 170);
+            this.driverButton.Name = "driverButton";
+            this.driverButton.Size = new System.Drawing.Size(75, 23);
+            this.driverButton.TabIndex = 13;
+            this.driverButton.Text = "Edit Drivers";
+            this.driverButton.UseVisualStyleBackColor = true;
+            this.driverButton.Click += new System.EventHandler(this.driverButton_Click);
             // 
             // buttonCalculatePoints
             // 
@@ -229,17 +242,28 @@
             // 
             this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 412);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 418);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(0, 13);
             this.linkLabel1.TabIndex = 12;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 339);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "Clear Text";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AcceptButton = this.buttonParseURL;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(717, 434);
+            this.ClientSize = new System.Drawing.Size(731, 440);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -278,6 +302,8 @@
         private System.Windows.Forms.Label labelNonPred;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Button driverButton;
+        private System.Windows.Forms.Button button1;
     }
 }
 

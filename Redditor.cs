@@ -16,6 +16,7 @@ namespace GTGHelper
 
         public string[] Predictions = new string[10]; // Parsed predictions
         public string ExtraComment; // Contains any extra text written in the comment
+        public string ExtraParseComment = "";
         bool Error = false; // Set if parsing failed
         public bool Edited = false;
 
@@ -23,14 +24,18 @@ namespace GTGHelper
 
         public bool ParseGTGComment()
         {
-            Error = ParseRedditor();
+            Error = ParseRedditor(false);
+            if (Error)
+            {
+                Error = ParseRedditor(true);
+            }
             if (Edited)
                 return false;
             return !Error;
         }
 
         // Try to get grid positions from comment
-        bool ParseRedditor()
+        bool ParseRedditor(bool ignoreNumbering)
         {
             StringBuilder extra = new StringBuilder();
             if (CommentText == null)
@@ -52,29 +57,49 @@ namespace GTGHelper
                     lowered = lowered.Substring(1).Trim();
                 }
 
-                // Get the position
-                bool noP = false;
-                if (!lowered.StartsWith("p"))
+                int ipos = 0;
+                string pred = "";
+                if (!ignoreNumbering)
                 {
-                    noP = true;
-                    //extra.AppendLine("> " + str);
-                    //continue;
+                    // Get the position
+                    bool noP = false;
+                    if (!lowered.StartsWith("p"))
+                    {
+                        noP = true;
+                        //extra.AppendLine("> " + str);
+                        //continue;
+                    }
+                    int firstSpace = lowered.IndexOf(' ');
+                    if (firstSpace == -1)
+                    {
+                        extra.AppendLine("> " + str);
+                        continue;
+                    }
+                    string pos = lowered.Substring(noP ? 0 : 1, firstSpace).Trim();
+                    pos = pos.TrimEnd(new char[] { '.', ':' });
+
+                    // try to parse int
+                    if (!int.TryParse(pos, out ipos))
+                    {
+                        extra.AppendLine("> " + str);
+                        continue;
+                    }
+                    
+                    pred = str.Substring(firstSpace).Trim().TrimEnd('.');
                 }
-                int firstSpace = lowered.IndexOf(' ');
-                if (firstSpace == -1)
+                else
                 {
-                    extra.AppendLine("> " + str);
-                    continue;
+                    // Ignore sentences
+                    if (lowered.Split(' ').Length >= 3)
+                    {
+                        extra.AppendLine("Ignored this line: " + str);
+                        continue;
+                    }
+
+                    ipos = posParsed + 1;
+                    pred = str;
                 }
-                string pos = lowered.Substring(noP?0:1, firstSpace).Trim();
-                pos = pos.TrimEnd(new char[] { '.', ':' });
-                // try to parse int
-                int ipos;
-                if (!int.TryParse(pos, out ipos))
-                {
-                    extra.AppendLine("> " + str);
-                    continue;
-                }
+
                 if (ipos < 1 || ipos > 10)
                 {
                     extra.AppendLine("> " + str);
@@ -82,8 +107,7 @@ namespace GTGHelper
                 }
 
                 // Now get the prediction
-                string pred = str.Substring(firstSpace);
-                pred = pred.Trim().TrimEnd('.');
+                
                 if (pred.Length == 0)
                 {
                     extra.AppendLine("> " + str);
@@ -153,7 +177,7 @@ namespace GTGHelper
                 pred = "Predictions:\n" + pred + "\n";
             //else if(Error)
             //    pred = "[GTGHelper] Couldn't find any prediction, perhaps do a manual check.\n";
-            return string.Format("Name: {0} \t Posted: {1}\n{2}Unparsed comment content:\n{3}--------------------------------\n", Name, PostTime, pred, ExtraComment);
+            return string.Format("Name: {0} \t Posted: {1}\n{2}Unparsed comment content:\n{3}\n{4}--------------------------------\n", Name, PostTime, pred, ExtraComment, ExtraParseComment);
         }
     }
 }

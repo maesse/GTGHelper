@@ -9,167 +9,61 @@ using System.Net;
 using System.IO;
 using HtmlAgilityPack;
 using System.Diagnostics;
+using System.Configuration;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace GTGHelper
 {
+    // Delegate for appending text to the GUI from another thread.
+    public delegate void DriverListChanged();
+    delegate void AppendTextDelegate(string str);
+
     public partial class Form1 : Form
     {
-        // Delegate for appending text to the GUI from another thread.
-        delegate void AppendTextDelegate(string str);
-        public Parser parser;
+        
+        
+        Parser parser;
         static string UpdateURL;
         bool _commentLock = true;
         bool _racerLock = true;
         bool commentLock { get { return _commentLock; } set { _commentLock = value; CheckLock(); } } // true untill comments are parsed
         bool racerLock { get { return _racerLock; } set { _racerLock = value; CheckLock(); } } // true untill racewinners has been set
 
+        DriverListChanged driverChangedDelegate;
+
         // List of all racers in the champtionship
-        static List<Racer> Racers = new List<Racer>();
-
-        // Source list of names
-        static string[] fullDrivers = new string[] 
-        {
-            // retired drivers
-//            "Karun Chandhok",
-//            "Bruno Senna",
-//            "Pedro de la Rosa",
-//            "Lucas di Grassi",
-//            "Nico Hulkenberg",
-//            "Robert Kubica",
-            "Jenson Button",
-            "Lewis Hamilton",
-            "Michael Schumacher",
-            "Nico Rosberg",
-            "Sebastian Vettel",
-            "Mark Webber",
-            "Felipe Massa",
-            "Fernando Alonso",
-            "Rubens Barrichello",
-            "Vitaly Petrov",
-            "Adrian Sutil",
-            "Vitantonio Liuzzi",
-            "Sebastien Buemi",
-            "Jaime Alguersuari",
-            "Jarno Trulli",
-            "Heikki Kovalainen",
-            "Kamui Kobayashi",
-            "Timo Glock",
-            "Nick Heidfeld",
-
-            // new drivers
-            "Pastor Maldonado",
-            "Sergio Perez",
-            "Narain Karthikeyan",
-            "Jerome d'Ambrosio",
-            "Paul di Resta"
-        };
+        List<Racer> Racers = new List<Racer>();
 
         // Inits program
         void Init()
         {
-            // Put racers in the racers list.
-            for (int i = 0; i < fullDrivers.Length; i++)
-            {
-                string driver = fullDrivers[i];
-                Racer r = new Racer(driver);
+            Racers = DriverLoader.GetRacers();
 
-                // Handle obvious cases of alternative spellings
-                switch (r.Name)
-                {
-                    case "Felipe Massa":
-                        r.Alternatives.Add("MAS");
-                        break;
-                    //case "Robert Kubica":
-                    //    r.Alternatives.Add("KUB");
-                    //    break;
-                    case "Fernando Alonso":
-                        r.Alternatives.Add("ALO");
-                        break;
-                    case "Michael Schumacher":
-                        r.Alternatives.Add("Schumi");
-                        r.Alternatives.Add("Shumi");
-                        r.Alternatives.Add("Shumacher");
-                        r.Alternatives.Add("MSC");
-                        r.Alternatives.Add("SCH");
-                        r.Alternatives.Add("Schu");
-                        break;
-                    case "Jenson Button":
-                        r.Alternatives.Add("Buttons");
-                        r.Alternatives.Add("BUT");
-                        break;
-                    case "Mark Webber":
-                        r.Alternatives.Add("Weber");
-                        r.Alternatives.Add("WEB");
-                        r.Alternatives.Add("Webbaarrrrrr");
-                        break;
-                    case "Nico Rosberg":
-                        r.Alternatives.Add("Roseberg");
-                        r.Alternatives.Add("Rosbeg");
-                        r.Alternatives.Add("ROS");
-                        r.Alternatives.Add("Rosburg");
-                        r.Alternatives.Add("Rosbery");
-                        r.Alternatives.Add("Rosberd");
-                        r.Alternatives.Add("Rossberg");
-                        break;
-                    case "Rubens Barrichello":
-                        r.Alternatives.Add("Barichello");
-                        r.Alternatives.Add("Barrichelo");
-                        r.Alternatives.Add("BAR");
-                        r.Alternatives.Add("Barachello");
-                        r.Alternatives.Add("Barrachello");
-                        r.Alternatives.Add("Barricello");
-                        break;
-                    case "Lewis Hamilton":
-                        r.Alternatives.Add("Hammilton");
-                        r.Alternatives.Add("HAM");
-                        r.Alternatives.Add("hammi");
-                        break;
-                    case "Kamui Kobayashi":
-                        r.Alternatives.Add("Kobyashi");
-                        r.Alternatives.Add("Koboyashi");
-                        r.Alternatives.Add("Kobiyashi");
-                        r.Alternatives.Add("Kobash!");
-                        r.Alternatives.Add("Kobashi");
-                        
-                        break;
-                    case "Sebastian Vettel":
-                        r.Alternatives.Add("Vettle");
-                        r.Alternatives.Add("VET");
-                        r.Alternatives.Add("Vettl");
-                        break;
-                    //case "Nico Hulkenberg":
-                    //    r.Alternatives.Add("hulkenburg");
-                    //    r.Alternatives.Add("hülkenberg");
-                    //    r.Alternatives.Add("Hulk");
-                    //    break;
-                    case "Adrian Sutil":
-                        r.Alternatives.Add("SUT");
-                        break;
-                    case "Jaime Alguersuari":
-                        r.Alternatives.Add("Algesuari");
-                        r.Alternatives.Add("alguseari");
-                        break;
-                    case "Vitantonio Liuzzi":
-                        r.Alternatives.Add("Luizzi");
-                        break;
-                    case "Nick Heidfeld":
-                        r.Alternatives.Add("Hiedfeld");
-                        break;
-                }
-
-                Racers.Add(r);
-            }
+            // Add racers to UI
+            driverlist.Items.Clear();
             driverlist.Items.AddRange(Racers.ToArray());
+
+            driverChangedDelegate = new DriverListChanged(RefreshDriverLists);
+        }
+
+        private void RefreshDriverLists()
+        {
+            // Add racers to UI
+            driverlist.Items.Clear();
+            driverlist.Items.AddRange(Racers.ToArray());
+
+            
         }
 
         public Form1()
         {
-            
             InitializeComponent();
-            Init();
             // Set title
             this.Text = "GTGGHelper " + Program.VERSION;
             Hook.form = this;
+
+            Init();
             CheckForUpdate();
         }
 
@@ -294,9 +188,11 @@ namespace GTGHelper
         // Called when the URL/GTG parser finishes
         void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            Parser parse = e.Result as Parser;
             // Check if parsing is OK, and disables the comment lock
-            if (parser != null && parser.parseResults.Count > 0)
+            if (parse != null && parse.parseResults.Count > 0)
             {
+                parser = parse;
                 commentLock = false;
                 labelPred.Text = "" + parser.parseResults.Count;
                 labelNonPred.Text = "" + parser.failedComments.Count;
@@ -369,6 +265,7 @@ namespace GTGHelper
             // Handle each GTG Comment
             foreach (Redditor red in parser.parseResults)
             {
+                red.ExtraParseComment = "";
                 // Will be set to false if a prediction couldn't be parsed
                 bool parseOk = true;
 
@@ -405,7 +302,7 @@ namespace GTGHelper
                     if (!nameOk)
                     {
                         // Abort this redditor
-                        red.ExtraComment += "[ScoreCalculator] I don't understand this: " + predictName + "\n";
+                        red.ExtraParseComment += "[ScoreCalculator] I don't understand this: " + predictName + "\n";
                         parseOk = false;
                         break;
                     }
@@ -524,6 +421,17 @@ namespace GTGHelper
             }
             Hook.WriteLine("------------------------------------");
             Hook.WriteLine("GTGHelper finished. :)");
+        }
+
+        private void driverButton_Click(object sender, EventArgs e)
+        {
+            DriverEditUI driverEdit = new DriverEditUI(Racers, driverChangedDelegate);
+            driverEdit.ShowDialog(this);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            richTextBox1.ResetText();
         }
     }
 }

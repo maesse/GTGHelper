@@ -59,12 +59,12 @@ namespace GTGHelper
             Hook.WriteLine("Starting to parse comments...");
             // Try to parse the html as a reddit GTG comment page
             Parser parse = new Parser(html);
+            e.Result = parse;
         }
 
         // Parse HTML page
         public Parser(string html)
         {
-            Hook.form.parser = this;
             ReadDocument(html);
             HtmlNode node;
 
@@ -107,11 +107,7 @@ namespace GTGHelper
             // Read comment info
             Redditor red = new Redditor();
             red.Name = node.ChildNodes[2].ChildNodes[0].ChildNodes[1].InnerText;
-            int postTimeOffset = 5;
-            // Reddit moderator adds some stuff
-            if (node.ChildNodes[2].ChildNodes[0].ChildNodes.Count == 8)
-                postTimeOffset = 6;
-            red.PostTime = node.ChildNodes[2].ChildNodes[0].ChildNodes[postTimeOffset].InnerText;
+            red.PostTime = node.ChildNodes[2].ChildNodes[0].Element("time").InnerText;
             red.CommentText = node.ChildNodes[2].ChildNodes[1].ChildNodes[3].InnerText;
 
             // Clean up
@@ -123,6 +119,8 @@ namespace GTGHelper
                 red.PostTime = red.PostTime.Replace("&#42;", "*(EDITED!!!)");
                 red.Edited = true;
             }
+
+            red.ExtraComment = "";
 
             // Try to parse the comments content
             if (red.ParseGTGComment())
