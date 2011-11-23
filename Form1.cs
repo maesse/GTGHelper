@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
-using HtmlAgilityPack;
 using System.Diagnostics;
 using System.Configuration;
 using System.Xml.Serialization;
@@ -101,7 +100,7 @@ namespace GTGHelper
             string url = textBox1.Text;
             BackgroundWorker worker = new BackgroundWorker();
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-            worker.DoWork += new DoWorkEventHandler(Parser.ParseUrl);
+            worker.DoWork += new DoWorkEventHandler(JSONParser.ParseUrl);
             worker.RunWorkerAsync(url);
         }
 

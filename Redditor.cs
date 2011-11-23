@@ -52,7 +52,7 @@ namespace GTGHelper
                     continue;
 
                 // Remove leading "*" if it is there
-                if (lowered.StartsWith("*"))
+                if (lowered.StartsWith("*") || lowered.StartsWith("■"))
                 {
                     lowered = lowered.Substring(1).Trim();
                 }
@@ -90,7 +90,7 @@ namespace GTGHelper
                 else
                 {
                     // Ignore sentences
-                    if (lowered.Split(' ').Length >= 3)
+                    if (lowered.Split(' ').Length >= 5)
                     {
                         extra.AppendLine("Ignored this line: " + str);
                         continue;
